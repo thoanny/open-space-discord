@@ -1,10 +1,8 @@
 import os
 import discord
-import psycopg2
 import json
 import requests
 from dotenv import dotenv_values
-from psycopg2.extras import RealDictCursor
 from discord.ext import commands
 
 
@@ -18,14 +16,6 @@ intents.members = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 MESSAGE_DELETE_AFTER: int = 5
-
-conn = psycopg2.connect(
-    "host=%s dbname=%s user=%s password=%s" % (
-        config['DB_HOST'], config['DB_BASE'],
-        config['DB_USER'], config['DB_PASS']
-    )
-)
-db = conn.cursor(cursor_factory=RealDictCursor)
 
 
 @bot.command(name='sync')
