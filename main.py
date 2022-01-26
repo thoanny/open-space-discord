@@ -20,17 +20,19 @@ MESSAGE_DELETE_AFTER: int = 5
 
 @bot.command(name='sync')
 async def twitch_sync(ctx, arg):
-    role = discord.utils.get(ctx.message.guild.roles, name="Certifié")
+    certifie = discord.utils.get(ctx.message.guild.roles, name="Certifié")
+    approuve = discord.utils.get(ctx.message.guild.roles, name="Approuvé")
     user = ctx.message.author
 
-    if role not in user.roles:
+    if certifie not in user.roles:
         sync = requests.get(config['SYNC_API'] + arg)
         data = json.loads(sync.text)
 
         if 'error' in data:
             await ctx.message.channel.send('[Erreur] '+data['error'], delete_after=MESSAGE_DELETE_AFTER*2)
         else:
-            await user.add_roles(role)
+            await user.add_roles(certifie)
+            await user.remove_roles(approuve)
             await user.edit(nick=data['success'])
             await ctx.message.channel.send('Bravo, tu es certifié·e !', delete_after=MESSAGE_DELETE_AFTER)
 
